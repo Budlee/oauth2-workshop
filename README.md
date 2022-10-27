@@ -138,11 +138,55 @@ Success you have registered a client for client
 ## Creating a resource server
 
 You have seen how to register clients in the Authorization server.
-Next you want to support 
+Next we need to serve up some resources, this if going to be a simple Spring API.
 
-## Creating a client 
+Navigate to <start.spring.io> choose your setup, however, you will need to select the following dependencies:
 
-### Client application using client credentials grant
+* Spring Web / Spring Reactive Web
+* OAuth2 Resource Server
 
+Download the project and open it up.
+You should then create a `controller` package and an Emails controller.
+You can see an example of this setup in the sample [resource server](code/oauth2/resource-server/).
 
+> Note you may need to change the server.port of the application, I've changed it to port 9090
+
+You can see in the controller that the Principal is extracted and can be used to check claims in the token to verify information about the client.
+
+```java
+@GetMapping
+	public List<EmailContact> getEmailContacts(@AuthenticationPrincipal JwtAuthenticationToken principal) {
+		var clientEmails = clientEmailStore.get(principal.getToken().getClaimAsString("azp"));
+		if (clientEmails == null) {
+			throw new AuthorizationServiceException("Not Authorized");
+		}
+		return clientEmails;
+	}
+```
+
+Lets try this out, run your application and send the following request:
+
+```shell
+# Get the access token
+CLIENT_CRED_ID=ClientCredentialsApp
+CLIENT_CRED_SECRET=oneM9EujQeFywuv8QBnFRKc87ECnZoBy
+ACCESS_TOKEN=$(curl --location -X POST 'http://localhost:8080/realms/oauth2-workshop/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode "client_id=$CLIENT_CRED_ID" \
+--data-urlencode "client_secret=$CLIENT_CRED_SECRET" \
+--data-urlencode 'grant_type=client_credentials' \
+| jq -r '.access_token')
+
+# Call the Resource server as the Client Application
+
+curl --header "Authorization: Bearer $ACCESS_TOKEN" \
+http://localhost:9090/emails
+```
+
+Success you should now see that your request returns a response.
+
+Why not try the following:
+
+1. Try modifying your access token does the request still work?
+2. Wait till your access token expires, what happens when you send it to the resource server
 
