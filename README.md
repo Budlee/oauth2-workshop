@@ -110,6 +110,8 @@ Lets fire it up.
 docker run -d -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:19.0.3 start-dev
 ``` 
 
+Give the image a minute or two to load and then visit the admin portal <http://localhost:8080/>
+
 As we have seen, an Authorization Server issues Access Tokens to to the client.
 The Authorization Server needs to keep track of the clients, i.e they need to be known to the Authorization Server.
 If the Authorization Server does not know who the clients are then how can it issue Access Tokens?
