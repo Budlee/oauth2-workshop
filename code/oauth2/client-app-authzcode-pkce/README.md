@@ -8,7 +8,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - `node --version && npm --version`
 - `npm install && npm start`. Navigate to [localhost:4200](http://localhost:4200/). The application will automatically reload if you change any of the source files.
 
-Follow below steps if you would like to create SPA from scratch, otherwise skip below steps
+Follow below steps if you would like to create Single page client app from the scratch, otherwise skip the steps.
 ```shell
   CLIENT_APP_NAME=client-app-authz-code-pkce
   sudo npm install -g @angular/cli &&
@@ -18,11 +18,13 @@ Follow below steps if you would like to create SPA from scratch, otherwise skip 
   npm start
 ```
 
-### Create Realm 
+### Create Realm [KeyCloak](http://localhost:8080)
 - `Administration Console -> Create Realm`
 - `Realm Settings -> Endpoints -> OpenID Endpoint Configuration -> Note the Issuer URL`
 
 ### Create the client and demo user in KeyCloak (Authorization Server)
+
+#### Enable the authorization flow options as specified on below screenshots and select the PKCE Challenge Method (S256)
 1. ![Create a client for PKCE Authorization Code Flow](images/auth-code-grant-with-pkce.png "PKCE Authorization Code Flow")
 2. ![Access Settings](images/auth-code-with-pkce-access-settings.png "Access Settings")
 3. ![Advanced Settings](images/auth-code-with-pkce-adv-settings.png "Advanced Settings")
@@ -44,8 +46,10 @@ export const authConfig: AuthConfig = {
 }
 ```
 [Access localhost:4200](http://localhost:4200)
-[Login](images/auth-code-with-pkce-login.png "Request for Authorization Code")
-[Token](images/auth-code-with-pkce-token.png "Token call with auth code")
+
+![Login](images/auth-code-with-pkce-login.png "Request for Authorization Code")
+
+![Token](images/auth-code-with-pkce-token.png "Token call with auth code")
 
 
 ### Reference
