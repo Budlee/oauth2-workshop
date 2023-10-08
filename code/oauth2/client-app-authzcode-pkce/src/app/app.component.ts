@@ -23,4 +23,14 @@ export class AppComponent {
   logout() {
       this.oauthService.logOut();
     }
+
+   get name(){
+      let claims = this.oauthService.getIdentityClaims();
+      if (!claims) return null;
+      return claims['name'];
+   }
+
+   get token(){
+      return this.oauthService.getIdToken();
+   }
 }

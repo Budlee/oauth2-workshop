@@ -1,4 +1,4 @@
-# Client App Authorization Code with PKCE
+# Client App for "Authorization Code grant with PKCE flow"
 
 ### Pre-requisites
 - Install node in your PC [NodeJS Download](https://nodejs.org/en/download)
@@ -25,7 +25,7 @@ Follow below steps if you would like to create Single page client app from the s
 ### Create the client and demo user in KeyCloak (Authorization Server)
 
 #### Enable the authorization flow options as specified on below screenshots and select the PKCE Challenge Method (S256)
-1. ![Create a client for PKCE Authorization Code Flow](images/auth-code-grant-with-pkce.png "PKCE Authorization Code Flow")
+1. ![Client account for Authorization Code grant with PKCE Flow](images/auth-code-grant-with-pkce.png "PKCE Authorization Code Flow")
 2. ![Access Settings](images/auth-code-with-pkce-access-settings.png "Access Settings")
 3. ![Advanced Settings](images/auth-code-with-pkce-adv-settings.png "Advanced Settings")
 
@@ -58,3 +58,5 @@ export const authConfig: AuthConfig = {
 [Steps to create a code challenge](https://datatracker.ietf.org/doc/html/rfc7636#section-4.2)
 
 [Tool to generate code challenge](https://tonyxu-io.github.io/pkce-generator/)
+
+[Oauth2 vs OpenID Connect](https://www.linkedin.com/advice/0/how-do-you-choose-between-oauth2-openid?trk=cah1)
