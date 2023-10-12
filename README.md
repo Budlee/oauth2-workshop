@@ -165,7 +165,7 @@ Lets verify it is working correctly by requesting an Access Token from the token
 
 ```shell
 CLIENT_CRED_ID=ClientCredentialsApp
-CLIENT_CRED_SECRET=oneM9EujQeFywuv8QBnFRKc87ECnZoBy
+CLIENT_CRED_SECRET=C2sBktd5E2yMjF7xu6ysNxYky3lRlOE6
 curl --location -X POST 'http://localhost:8080/realms/oauth2-workshop/protocol/openid-connect/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode "client_id=$CLIENT_CRED_ID" \
@@ -216,10 +216,11 @@ To do this we will register a Scope into keycloak
 1. Select the `AuthCodeGrantApp` from the Client list
 2. In the `Settings` tab scroll to the `Access settings`.
   Set the `Root URL` and `Home URL` to `http://localhost:7070`.
-  The `Valid redirect URIs` should be set to `/login/oauth2/code/keycloak`, this is relative to your Root URL.
-  > Note: The port value of 7070 is the port number you will be hosting your client application at. Please take a note if your change this.v
+  The `Valid redirect URIs` should be set to `http://localhost:7070/login/oauth2/code/keycloak`, this is relative to your Root URL.
+  > Note: The port value of 7070 is the port number you will be hosting your client application at. Please take a note if your change this.
   ![Authorization Code Grant Access Settings](images/auth-code-grant-config-access.png)
-3. In the `Login Settings` set the `Login theme` to be base. Toggle on both the `Consent required` and `Display Client on screen`
+3. In the `Login Settings` set the `Login theme` to be `base`. Toggle on both the `Consent required` and `Display Client on screen`
+4. Press `Save` to update the settings for the Client Application
   ![Authorization Code Grant Login Settings](images/auth-code-grant-config-login.png)
 4. We need to register that the Client can use the Contacts API, to do this we add it to the list of scopes available to it.
   Visit the `Client Scopes` tab in the Client application.
@@ -243,8 +244,6 @@ To get the credentials you can retrieve them from the `Credentials` tab for the 
 This can be seen in the following image
 
 ![Authorization Code Grant obtaining credntials](images/auth-code-grant-credentials.png)
-
-
 
 
 ## Creating a Resource Server
@@ -276,13 +275,16 @@ It can be inspected to check claims in the token to extract information about th
 
 ```java
 @GetMapping
-	public List<EmailContact> getEmailContacts(@AuthenticationPrincipal JwtAuthenticationToken principal) {
-		var clientEmails = clientEmailStore.get(principal.getToken().getClaimAsString("azp"));
-		if (clientEmails == null) {
-			throw new AuthorizationServiceException("Not Authorized");
-		}
-		return clientEmails;
-	}
+public List<EmailContact> getEmailContacts(JwtAuthenticationToken principal) {
+        if (!principal.getToken().getClaimAsString("scope").contains("Contacts-API")){
+            throw new AuthorizationServiceException("Not Authorized");
+        }
+        var clientEmails = clientEmailStore.get(principal.getToken().getClaimAsString("sub"));
+        if (clientEmails == null) {
+            throw new AuthorizationServiceException("Not Authorized");
+        }
+        return clientEmails;
+        }
 ```
 
 Lets try this out using the client application from the Client Credentials, run the following request:
@@ -290,7 +292,7 @@ Lets try this out using the client application from the Client Credentials, run 
 ```shell
 # Get the Access Token
 CLIENT_CRED_ID=ClientCredentialsApp
-CLIENT_CRED_SECRET=oneM9EujQeFywuv8QBnFRKc87ECnZoBy
+CLIENT_CRED_SECRET=C2sBktd5E2yMjF7xu6ysNxYky3lRlOE6
 ACCESS_TOKEN=$(curl --location -X POST 'http://localhost:8080/realms/oauth2-workshop/protocol/openid-connect/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode "client_id=$CLIENT_CRED_ID" \
@@ -300,14 +302,18 @@ ACCESS_TOKEN=$(curl --location -X POST 'http://localhost:8080/realms/oauth2-work
 
 # Call the Resource Server as the Client Application
 
-curl --header "Authorization: Bearer $ACCESS_TOKEN" \
+curl -v --header "Authorization: Bearer $ACCESS_TOKEN" \
 http://localhost:9090/emails
 ```
 
 Success you should now see that your request returns a response.
 
+Let's try this out using Auth Code Grant, simple visit <http://localhost:7070/>
+
 >__Try it yourself:__
 > 1. Try modifying your Access Token does the request still work?
 > 2. Wait till your Access Token expires, what happens when you send it to the Resource Server?
-> 3. Use a differnt JWKs and send your Access Token against the Resource Server.
+> 3. Use a different JWKs and send your Access Token against the Resource Server.
 > What happens?
+
+[//]: # (TODO Add more details for the Auth Code Grant setup as a Resource Server)

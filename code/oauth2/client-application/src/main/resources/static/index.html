@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <title>OAuth2 Demo</title>
+
+</head>
+<body>
+<h1>Email Contacts Retriever - An OAuth2 demo!</h1>
+<script src="src/app.js"></script>
+
+<div>
+    Hello, to see this page you will have had to authorize that this CLIENT application can the Contacts API.
+    <br>
+    The Contacts API is served by a Resource Server on http://localhost:9090
+</div>
+
+<div id="access-token">
+    <p>Press to see your access token</p>
+    <button onclick="requestAccessToken()">See Access Token</button>
+    <div id="div-accessToken"></div>
+</div>
+
+<div id="email-container">
+    <p>Press to get your contacts</p>
+    <button onclick="requestContacts()">GetMails</button>
+    <div id="div-contacts"></div>
+</div>
+
+</body>
+
+</html>
