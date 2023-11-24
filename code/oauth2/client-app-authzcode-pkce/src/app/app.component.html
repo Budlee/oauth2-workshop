@@ -1,0 +1,12 @@
+<h1>Authorization Code grant with PKCE flow</h1>
+<button (click)="login()">Login</button>
+<br/><br/>
+<button (click)="logout()">Logout</button>
+
+<h3 *ngIf="name">
+  Hello, {{name}}
+</h3>
+<pre *ngIf="token">
+  Access Token:
+  {{token}}
+</pre>
